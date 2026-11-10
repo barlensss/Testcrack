@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BARA CRACK | X</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030305;
+            --glass-bg: rgba(20, 20, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #00ffd5; /* Cyan Neon */
+            --accent-glow: rgba(0, 255, 213, 0.3);
+            --danger: #ff3366;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Deep Space Background */
+            background-image: radial-gradient(circle at 15% 50%, rgba(0, 255, 213, 0.08), transparent 40%),
+                              radial-gradient(circle at 85% 30%, rgba(255, 51, 102, 0.08), transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Noise Texture Overlay (Biar ga flat/AI-slop) */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Container Utama */
+        .app-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        /* Panel Kaca (Glassmorphism) */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            position: relative;
+        }
+
+        /* Kiri: Form Input */
+        .panel-left { display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .brand { margin-bottom: 30px; }
+        .brand h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+        .brand h1 span { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+        
+        .token-box {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(0, 255, 213, 0.1);
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            padding: 6px 12px; border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem; color: var(--accent);
+            margin-top: 10px; transition: all 0.3s;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px; border-radius: 12px;
+            color: var(--text); font-family: 'Space Mono', monospace; font-size: 1rem;
+            outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--accent); background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+        .btn {
+            width: 100%; padding: 16px; border: none; border-radius: 12px;
+            background: var(--accent); color: #000;
+            font-weight: 800; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 15px 25px var(--accent-glow); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+        /* Kanan: Terminal */
+        .panel-right { padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+        .term-head {
+            padding: 15px 20px; background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .term-body {
+            padding: 20px; flex: 1; overflow-y: auto;
+            font-family: 'Space Mono', monospace; font-size: 0.85rem; line-height: 1.6;
+        }
+        .log-line { margin-bottom: 6px; word-wrap: break-word; }
+        .c-green { color: var(--accent); }
+        .c-red { color: var(--danger); }
+        .c-blue { color: #60a5fa; }
+        .c-gray { color: var(--text-muted); }
+
+        .term-body::-webkit-scrollbar { width: 4px; }
+        .term-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            .app-wrapper { grid-template-columns: 1fr; }
+            .panel-right { min-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- PANEL KIRI -->
+        <div class="glass panel-left">
+            <div>
+                <div class="brand">
+                    <h1>BARA<span>CRACK</span></h1>
+                    <div class="token-box" id="tokenBox">
+                        <span id="tokenLabel">TOKEN:</span>
+                        <span id="tokenValue">-</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Target Username</label>
+                    <input type="text" id="username" placeholder="kyel" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>New Password</label>
+                    <input type="text" id="newpass" placeholder="••••••••" autocomplete="off">
+                </div>
+            </div>
+            
+            <button class="btn" id="injectBtn" onclick="executeInject()">Execute Injection</button>
+        </div>
+
+        <!-- PANEL KANAN (LOG) -->
+        <div class="glass panel-right">
+            <div class="term-head">
+                <div class="term-dot" style="background:#ff5f56"></div>
+                <div class="term-dot" style="background:#ffbd2e"></div>
+                <div class="term-dot" style="background:#27c93f"></div>
+                <div style="margin-left:auto; font-family:'Space Mono'; font-size:0.7rem; color:var(--text-muted)">SYS_LOG.exe</div>
+            </div>
+            <div class="term-body" id="terminal">
+                <div class="log-line c-gray">> Initializing secure connection...</div>
+                <div class="log-line c-gray">> Ready.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // LOGIKA SECRET OWNER (DOUBLE TAP)
+        // ==========================================
+        let tapCount = 0;
+        let tapTimer = null;
+
+        // Pantau ketukan di seluruh layar
+        document.body.addEventListener('click', function(e) {
+            // Jangan daftarin ketukan kalau yang diklik tombol atau input
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+
+            tapCount++;
+            if (tapCount === 2) {
+                // Ketukan kedua terdeteksi dalam waktu kurang dari 400ms
+                if (!isOwner()) {
+                    localStorage.setItem('is_owner', 'true');
+                    localStorage.setItem('points', '999');
+                    updateUI();
+                    log("SYSTEM OVERRIDE: OWNER ACCESS GRANTED.", "success");
+                    log("UNLIMITED TOKENS ACTIVATED.", "success");
+                    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                }
+                tapCount = 0;
+            }
+            
+            // Reset hitungan kalau udah lewat 400ms dari ketukan pertama
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { tapCount = 0; }, 400);
+        });
+
+        function isOwner() {
+            return localStorage.getItem('is_owner') === 'true';
+        }
+
+        // ==========================================
+        // SISTEM TOKEN / POIN
+        // ==========================================
+        function updateUI() {
+            let points = parseInt(localStorage.getItem('points') || '2');
+            const tokenValue = document.getElementById('tokenValue');
+            const tokenBox = document.getElementById('tokenBox');
+            const btn = document.getElementById('injectBtn');
+
+            if (isOwner()) {
+                tokenValue.innerText = "UNLIMITED";
+                tokenBox.style.borderColor = "var(--accent)";
+                tokenBox.style.boxShadow = "0 0 15px var(--accent-glow)";
+                btn.disabled = false;
+            } else {
+                tokenValue.innerText = points;
+                if (points <= 0) {
+                    btn.disabled = true;
+                    btn.innerText = "TOKEN HABIS";
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "Execute Injection";
+                }
+            }
+        }
+
+        window.onload = updateUI;
+
+        // ==========================================
+        // LOG & EKSEKUSI
+        // ==========================================
+        function log(msg, type = 'info') {
+            const term = document.getElementById('terminal');
+            const div = document.createElement('div');
+            div.className = 'log-line';
+            
+            let colorClass = 'c-blue';
+            if (type === 'success') colorClass = 'c-green';
+            if (type === 'error') colorClass = 'c-red';
+            if (type === 'info') colorClass = 'c-gray';
+
+            const time = new Date().toLocaleTimeString('en-US', {hour12: false});
+            div.innerHTML = `<span class="${colorClass}">[${time}]</span> ${msg}`;
+            
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        async function executeInject() {
+            const target = document.getElementById('username').value.trim();
+            const newPass = document.getElementById('newpass').value.trim();
+            const btn = document.getElementById('injectBtn');
+            let points = parseInt(localStorage.getItem('points') || '2');
+
+            if (!target || !newPass) {
+                log("ERROR: Kolom tidak boleh kosong.", "error");
+                return;
+            }
+
+            // Cek & Potong Token
+            if (!isOwner()) {
+                if (points <= 0) return;
+                points--;
+                localStorage.setItem('points', points);
+                updateUI();
+                log(`Token dipotong. Sisa: ${points}`, "info");
+            }
+
+            btn.disabled = true;
+            btn.innerText = "PROCESSING...";
+            log(`Memulai injeksi target: ${target}`, "info");
+
+            try {
+                const res = await fetch('/api/inject', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username: target, password: newPass })
+                });
+
+                const data = await res.json();
+                
+                if (data.logs) {
+                    data.logs.forEach(l => log(l.msg, l.type));
+                }
+
+                if (data.status === 'error') throw new Error("Gagal eksekusi");
+
+                // Efek sukses
+                if(navigator.vibrate) navigator.vibrate(200);
+
+            } catch (err) {
+                log(`CRITICAL FAILURE: ${err.message}`, "error");
+            } finally {
+                btn.disabled = false;
+                updateUI();
+            }
+        }
+    </script>
+</body>
+</html>
